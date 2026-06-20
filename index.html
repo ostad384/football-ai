@@ -260,14 +260,10 @@
     inputEl.value = ''; inputEl.style.height = 'auto';
     sendBtn.disabled = true; showTyping();
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('https://exciting-unity-production-1801.up.railway.app/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6', max_tokens: 1000,
-          system: `تو یه تحلیلگر فوتبال حرفه‌ای هستی به اسم «فوتبال‌یار». فارسی صحبت می‌کنی. تخصصت روی جام جهانی ۲۰۲۶ و فوتبال جهانیه. فقط درباره فوتبال صحبت کن. جواب‌ها رو با ایموجی جذاب کن.`,
-          messages: history
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({messages: history})
       });
       const data = await res.json();
       removeTyping();
