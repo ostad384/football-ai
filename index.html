@@ -7,402 +7,279 @@
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --pitch: #0d3b1e;
-      --pitch-mid: #145228;
-      --lime: #b5f53c;
-      --lime-dim: #8ec42a;
-      --white: #f4f9f0;
-      --muted: #7a9e84;
-      --card: #0a2e17;
-      --border: #1e5a30;
-      --radius: 12px;
+      --bg: #05080f;
+      --red: #e8182b;
+      --green: #1db954;
+      --blue: #1a6fe8;
+      --gold: #ffd700;
+      --white: #f1f5f9;
+      --muted: #64748b;
+      --glass: rgba(255,255,255,0.05);
+      --glass-border: rgba(255,255,255,0.10);
+      --radius: 14px;
     }
-
     body {
       font-family: 'Vazirmatn', sans-serif;
-      background: var(--pitch);
+      background: var(--bg);
       color: var(--white);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-x: hidden;
     }
+    .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15; animation: float 8s ease-in-out infinite; }
+    .blob-red   { width: 450px; height: 450px; background: var(--red);   top: -100px; right: -80px; animation-delay: 0s; }
+    .blob-green { width: 380px; height: 380px; background: var(--green); bottom: 0;   left: -60px; animation-delay: 3s; }
+    .blob-blue  { width: 320px; height: 320px; background: var(--blue);  top: 40%;    left: 50%;   animation-delay: 5s; }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-30px); } }
+    * { position: relative; z-index: 1; }
 
-    /* ── HEADER ── */
     header {
       width: 100%;
-      padding: 20px 32px;
+      padding: 18px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
     }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.3rem;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-    }
-    .logo-dot { color: var(--lime); }
-
+    .logo { font-size: 1.3rem; font-weight: 900; }
+    .logo span { color: var(--green); }
     .badge {
-      background: var(--lime);
-      color: var(--pitch);
+      background: linear-gradient(135deg, var(--red), var(--blue));
+      color: #fff;
       font-size: 0.65rem;
       font-weight: 700;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 99px;
       letter-spacing: 1px;
     }
 
-    /* ── HERO ── */
     .hero {
       text-align: center;
-      padding: 60px 24px 40px;
+      padding: 44px 24px 16px;
       max-width: 640px;
     }
 
-    .hero-tag {
-      display: inline-block;
-      font-size: 0.7rem;
+    /* WC 2026 SVG TROPHY */
+    .trophy-svg-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+      animation: trophy-pulse 2.5s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 24px rgba(255,215,0,0.55));
+    }
+    @keyframes trophy-pulse {
+      from { filter: drop-shadow(0 0 10px rgba(255,215,0,0.35)); transform: scale(1); }
+      to   { filter: drop-shadow(0 0 36px rgba(255,215,0,0.85)); transform: scale(1.05); }
+    }
+
+    .wc-label {
+      font-size: 0.65rem;
       font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--lime);
+      letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 6vw, 3.2rem);
-      font-weight: 900;
-      line-height: 1.15;
+      background: linear-gradient(90deg, var(--red), var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin-bottom: 14px;
+      display: block;
     }
+    .hero h1 { font-size: clamp(1.8rem, 5.5vw, 2.8rem); font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+    .hero h1 span { color: var(--green); }
+    .hero p { font-size: 0.93rem; color: var(--muted); line-height: 1.7; }
+    .flags { font-size: 1.5rem; letter-spacing: 4px; margin-top: 14px; opacity: 0.8; }
 
-    .hero h1 span { color: var(--lime); }
-
-    .hero p {
-      font-size: 1rem;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    /* ── QUICK CHIPS ── */
     .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       justify-content: center;
-      padding: 0 24px 32px;
+      padding: 22px 24px 26px;
     }
-
     .chip {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
       color: var(--muted);
       font-size: 0.8rem;
-      padding: 6px 14px;
+      padding: 7px 16px;
       border-radius: 99px;
       cursor: pointer;
       transition: all 0.2s;
       font-family: 'Vazirmatn', sans-serif;
     }
-    .chip:hover {
-      border-color: var(--lime);
-      color: var(--lime);
-    }
+    .chip:hover { border-color: var(--green); color: var(--green); background: rgba(29,185,84,0.08); }
 
-    /* ── CHAT BOX ── */
-    .chat-wrap {
-      width: 100%;
-      max-width: 720px;
-      padding: 0 20px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .messages {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      min-height: 80px;
-    }
-
-    .msg {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-
+    .chat-wrap { width: 100%; max-width: 720px; padding: 0 20px 40px; display: flex; flex-direction: column; gap: 16px; }
+    .messages { display: flex; flex-direction: column; gap: 14px; min-height: 80px; }
+    .msg { display: flex; gap: 10px; align-items: flex-start; }
     .msg.user { flex-direction: row-reverse; }
-
-    .avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-    .avatar.ai { background: var(--lime); color: var(--pitch); }
-    .avatar.user-av { background: var(--border); color: var(--white); }
-
-    .bubble {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      line-height: 1.7;
-    }
-    .msg.ai .bubble {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-top-right-radius: 4px;
-    }
-    .msg.user .bubble {
-      background: var(--lime);
-      color: var(--pitch);
-      font-weight: 500;
-      border-top-left-radius: 4px;
-    }
-
-    /* typing dots */
-    .typing span {
-      display: inline-block;
-      width: 6px; height: 6px;
-      background: var(--lime);
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: blink 1.2s infinite;
-    }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .avatar.ai { background: linear-gradient(135deg, var(--red), var(--blue)); }
+    .avatar.user-av { background: var(--glass); border: 1px solid var(--glass-border); }
+    .bubble { max-width: 80%; padding: 12px 16px; border-radius: var(--radius); font-size: 0.88rem; line-height: 1.75; }
+    .msg.ai .bubble { background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(16px); border-top-right-radius: 4px; }
+    .msg.user .bubble { background: linear-gradient(135deg, var(--blue), #2563eb); color: #fff; border-top-left-radius: 4px; }
+    .typing span { display: inline-block; width: 6px; height: 6px; background: var(--green); border-radius: 50%; margin: 0 2px; animation: blink 1.2s infinite; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes blink {
-      0%, 80%, 100% { opacity: 0.2; }
-      40% { opacity: 1; }
-    }
-
-    /* ── INPUT ROW ── */
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    textarea {
-      flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--white);
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: 0.9rem;
-      padding: 12px 16px;
-      resize: none;
-      outline: none;
-      line-height: 1.6;
-      min-height: 50px;
-      max-height: 140px;
-      transition: border-color 0.2s;
-    }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+    .input-row { display: flex; gap: 10px; align-items: flex-end; }
+    textarea { flex: 1; background: var(--glass); border: 1px solid var(--glass-border); backdrop-filter: blur(16px); border-radius: var(--radius); color: var(--white); font-family: 'Vazirmatn', sans-serif; font-size: 0.9rem; padding: 12px 16px; resize: none; outline: none; line-height: 1.6; min-height: 50px; max-height: 140px; transition: border-color 0.2s; }
     textarea::placeholder { color: var(--muted); }
-    textarea:focus { border-color: var(--lime); }
-
-    .send-btn {
-      background: var(--lime);
-      color: var(--pitch);
-      border: none;
-      border-radius: var(--radius);
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, transform 0.1s;
-      flex-shrink: 0;
-    }
-    .send-btn:hover { background: var(--lime-dim); }
+    textarea:focus { border-color: var(--green); }
+    .send-btn { background: linear-gradient(135deg, var(--green), #16a34a); color: #fff; border: none; border-radius: var(--radius); width: 50px; height: 50px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s, transform 0.1s; flex-shrink: 0; box-shadow: 0 4px 20px rgba(29,185,84,0.35); }
+    .send-btn:hover { opacity: 0.88; }
     .send-btn:active { transform: scale(0.95); }
-    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* ── FOOTER ── */
-    footer {
-      margin-top: auto;
-      padding: 16px;
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    @media (max-width: 480px) {
-      header { padding: 16px 20px; }
-      .hero { padding: 40px 20px 28px; }
-    }
+    .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    footer { margin-top: auto; padding: 16px; font-size: 0.72rem; color: var(--muted); text-align: center; }
+    @media (max-width: 480px) { header { padding: 14px 18px; } .hero { padding: 30px 16px 12px; } }
   </style>
 </head>
 <body>
 
+<div class="bg-blobs">
+  <div class="blob blob-red"></div>
+  <div class="blob blob-green"></div>
+  <div class="blob blob-blue"></div>
+</div>
+
 <header>
-  <div class="logo">⚽ فوتبال<span class="logo-dot">یار</span></div>
-  <span class="badge">هوش مصنوعی</span>
+  <div class="logo">⚽ فوتبال<span>یار</span></div>
+  <span class="badge">جام جهانی ۲۰۲۶</span>
 </header>
 
 <section class="hero">
-  <span class="hero-tag">تحلیل هوشمند فوتبال</span>
+  <!-- WC 2026 SVG Trophy -->
+  <div class="trophy-svg-wrap">
+    <svg width="110" height="150" viewBox="0 0 110 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- base plate -->
+      <rect x="22" y="132" width="66" height="10" rx="4" fill="url(#goldGrad)"/>
+      <rect x="30" y="122" width="50" height="12" rx="3" fill="url(#goldGrad)"/>
+      <!-- stem -->
+      <rect x="46" y="100" width="18" height="24" rx="3" fill="url(#goldGrad)"/>
+      <!-- cup body -->
+      <path d="M20 20 Q18 60 30 80 Q40 95 55 98 Q70 95 80 80 Q92 60 90 20 Z" fill="url(#goldGrad)"/>
+      <!-- cup shine -->
+      <path d="M30 25 Q28 55 38 72" stroke="rgba(255,255,255,0.35)" stroke-width="3" stroke-linecap="round"/>
+      <!-- handles -->
+      <path d="M20 30 Q4 30 4 50 Q4 68 20 65" stroke="url(#goldGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M90 30 Q106 30 106 50 Q106 68 90 65" stroke="url(#goldGrad)" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <!-- stars on cup -->
+      <text x="55" y="55" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.9)">★</text>
+      <!-- WC 2026 text -->
+      <text x="55" y="78" text-anchor="middle" font-size="8" font-weight="bold" fill="rgba(255,255,255,0.85)" font-family="Arial">2026</text>
+      <!-- decorative lines -->
+      <line x1="30" y1="40" x2="80" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <line x1="26" y1="55" x2="84" y2="55" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <!-- gradient defs -->
+      <defs>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#FFE066"/>
+          <stop offset="40%"  stop-color="#FFD700"/>
+          <stop offset="70%"  stop-color="#C8960C"/>
+          <stop offset="100%" stop-color="#FFD700"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <span class="wc-label">FIFA World Cup 2026 · USA · Canada · Mexico</span>
   <h1>هر سوال فوتبالی داری،<br/><span>اینجا جواب داره</span></h1>
   <p>تحلیل بازیکن، مقایسه تیم‌ها، پیش‌بینی بازی و هر چیز دیگه‌ای درباره فوتبال رو بپرس.</p>
+  <div class="flags">🇧🇷 🇩🇪 🇦🇷 🇫🇷 🇪🇸 🇵🇹 🇮🇷 🇺🇸</div>
 </section>
 
 <div class="chips">
-  <button class="chip" onclick="fillQ('بهترین مهاجم لیگ برتر ایران در فصل جاری کیه؟')">⚡ برترین مهاجم لیگ برتر</button>
+  <button class="chip" onclick="fillQ('بهترین تیم‌های جام جهانی ۲۰۲۶ کدوما هستن؟')">🏆 برترین‌های جام جهانی</button>
   <button class="chip" onclick="fillQ('رونالدو و مسی رو مقایسه کن')">🆚 رونالدو vs مسی</button>
-  <button class="chip" onclick="fillQ('شانس قهرمانی استقلال در فصل جاری چقدره؟')">🏆 شانس قهرمانی استقلال</button>
+  <button class="chip" onclick="fillQ('شانس قهرمانی برزیل در جام جهانی چقدره؟')">🇧🇷 شانس برزیل</button>
   <button class="chip" onclick="fillQ('بهترین فرمیشن برای تیمی که می‌خواد پرس بالا بزنه چیه؟')">📐 فرمیشن پرس بالا</button>
-  <button class="chip" onclick="fillQ('چرا بارسلونا در دهه اخیر ضعیف‌تر شده؟')">📉 افت بارسلونا</button>
+  <button class="chip" onclick="fillQ('ایران در جام جهانی ۲۰۲۶ چه شانسی داره؟')">🇮🇷 شانس ایران</button>
 </div>
 
 <div class="chat-wrap">
   <div class="messages" id="messages"></div>
-
   <div class="input-row">
     <textarea id="userInput" placeholder="سوالت درباره فوتبال رو بنویس..." rows="1"
       onkeydown="handleKey(event)" oninput="autoGrow(this)"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="ارسال">
-      ➤
-    </button>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
   </div>
 </div>
 
-<footer>ساخته‌شده با Claude AI · فوتبال‌یار ۲۰۲۵</footer>
+<footer>ساخته‌شده با Claude AI · فوتبال‌یار · جام جهانی ۲۰۲۶</footer>
 
 <script>
   const messagesEl = document.getElementById('messages');
   const inputEl = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
-
   let history = [];
 
-  function autoGrow(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 140) + 'px';
-  }
-
-  function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  }
-
-  function fillQ(text) {
-    inputEl.value = text;
-    autoGrow(inputEl);
-    inputEl.focus();
-  }
+  function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 140) + 'px'; }
+  function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+  function fillQ(text) { inputEl.value = text; autoGrow(inputEl); inputEl.focus(); }
 
   function addMsg(role, text) {
     const wrap = document.createElement('div');
     wrap.className = `msg ${role === 'user' ? 'user' : 'ai'}`;
-
     const av = document.createElement('div');
     av.className = `avatar ${role === 'user' ? 'user-av' : 'ai'}`;
     av.textContent = role === 'user' ? '👤' : '⚽';
-
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     bubble.innerHTML = text.replace(/\n/g, '<br/>');
-
-    wrap.appendChild(av);
-    wrap.appendChild(bubble);
+    wrap.appendChild(av); wrap.appendChild(bubble);
     messagesEl.appendChild(wrap);
     wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
     return bubble;
   }
 
   function showTyping() {
-    const wrap = document.createElement('div');
-    wrap.className = 'msg ai';
-    wrap.id = 'typing-indicator';
-
-    const av = document.createElement('div');
-    av.className = 'avatar ai';
-    av.textContent = '⚽';
-
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble typing';
+    const wrap = document.createElement('div'); wrap.className = 'msg ai'; wrap.id = 'typing-indicator';
+    const av = document.createElement('div'); av.className = 'avatar ai'; av.textContent = '⚽';
+    const bubble = document.createElement('div'); bubble.className = 'bubble typing';
     bubble.innerHTML = '<span></span><span></span><span></span>';
-
-    wrap.appendChild(av);
-    wrap.appendChild(bubble);
+    wrap.appendChild(av); wrap.appendChild(bubble);
     messagesEl.appendChild(wrap);
     wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }
 
-  function removeTyping() {
-    const el = document.getElementById('typing-indicator');
-    if (el) el.remove();
-  }
+  function removeTyping() { const el = document.getElementById('typing-indicator'); if (el) el.remove(); }
 
   async function sendMessage() {
     const text = inputEl.value.trim();
     if (!text || sendBtn.disabled) return;
-
     addMsg('user', text);
     history.push({ role: 'user', content: text });
-
-    inputEl.value = '';
-    inputEl.style.height = 'auto';
-    sendBtn.disabled = true;
-    showTyping();
-
+    inputEl.value = ''; inputEl.style.height = 'auto';
+    sendBtn.disabled = true; showTyping();
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json', 
-          'x-api-key': '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',
-          'anthropic-version':'2023-06-01'
-                 },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': 'YOUR_API_KEY', 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: `تو یه تحلیلگر فوتبال حرفه‌ای هستی به اسم «فوتبال‌یار». 
-فارسی صحبت می‌کنی و جواب‌هات کوتاه، دقیق و جذابه.
-فقط درباره فوتبال صحبت می‌کنی. اگه سوال غیر فوتبالی پرسیدن، مودبانه بگو که فقط فوتبال بلدی.
-از اطلاعات فوتبالی‌ات برای تحلیل واقعی استفاده کن. جواب‌ها رو با ایموجی جذاب کن.`,
+          model: 'claude-sonnet-4-6', max_tokens: 1000,
+          system: `تو یه تحلیلگر فوتبال حرفه‌ای هستی به اسم «فوتبال‌یار». فارسی صحبت می‌کنی. تخصصت روی جام جهانی ۲۰۲۶ و فوتبال جهانیه. فقط درباره فوتبال صحبت کن. جواب‌ها رو با ایموجی جذاب کن.`,
           messages: history
         })
       });
-
       const data = await res.json();
       removeTyping();
-
       const reply = data?.content?.[0]?.text || 'مشکلی پیش اومد، دوباره امتحان کن.';
       addMsg('ai', reply);
       history.push({ role: 'assistant', content: reply });
-
-    } catch (err) {
-      removeTyping();
-      addMsg('ai', '❌ خطا در اتصال. لطفاً دوباره امتحان کن.');
-    }
-
-    sendBtn.disabled = false;
-    inputEl.focus();
+    } catch (err) { removeTyping(); addMsg('ai', '❌ خطا در اتصال. لطفاً دوباره امتحان کن.'); }
+    sendBtn.disabled = false; inputEl.focus();
   }
 
-  // Welcome message
   window.onload = () => {
-    addMsg('ai', 'سلام! من فوتبال‌یارم ⚽\nهر سوالی درباره فوتبال داری بپرس — تحلیل بازیکن، مقایسه تیم‌ها، تاکتیک، لیگ‌ها و هر چیز دیگه‌ای.');
+    addMsg('ai', 'سلام! من فوتبال‌یارم ⚽🏆\nخوش اومدی به تحلیلگر هوشمند جام جهانی ۲۰۲۶!\nهر سوالی درباره تیم‌ها، بازیکنان، پیش‌بینی‌ها و تاکتیک‌ها داری بپرس.');
   };
 </script>
 </body>
