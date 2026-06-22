@@ -8,23 +8,16 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #05080f;
-      --red: #e8182b;
-      --green: #1db954;
-      --blue: #1a6fe8;
-      --gold: #ffd700;
-      --white: #f1f5f9;
-      --muted: #64748b;
-      --glass: rgba(255,255,255,0.05);
-      --glass-border: rgba(255,255,255,0.10);
-      --radius: 14px;
+      --bg: #05080f; --red: #e8182b; --green: #1db954; --blue: #1a6fe8;
+      --gold: #ffd700; --white: #f1f5f9; --muted: #64748b;
+      --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.10); --radius: 14px;
     }
     body { font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
     .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15; animation: float 8s ease-in-out infinite; }
-    .blob-red   { width: 450px; height: 450px; background: var(--red);   top: -100px; right: -80px; }
-    .blob-green { width: 380px; height: 380px; background: var(--green); bottom: 0; left: -60px; animation-delay: 3s; }
-    .blob-blue  { width: 320px; height: 320px; background: var(--blue);  top: 40%; left: 50%; animation-delay: 5s; }
+    .blob-red { width:450px; height:450px; background:var(--red); top:-100px; right:-80px; }
+    .blob-green { width:380px; height:380px; background:var(--green); bottom:0; left:-60px; animation-delay:3s; }
+    .blob-blue { width:320px; height:320px; background:var(--blue); top:40%; left:50%; animation-delay:5s; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
     * { position: relative; z-index: 1; }
 
@@ -42,19 +35,30 @@
     .hero p { font-size:0.93rem; color:var(--muted); line-height:1.7; }
     .flags { font-size:1.5rem; letter-spacing:4px; margin-top:14px; opacity:0.8; }
 
+    /* ── DATE NAV ── */
+    .date-nav { width:100%; max-width:720px; padding:20px 20px 0; }
+    .date-tabs { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
+    .date-tabs::-webkit-scrollbar { display:none; }
+    .date-tab { background:var(--glass); border:1px solid var(--glass-border); color:var(--muted); font-family:'Vazirmatn',sans-serif; font-size:0.75rem; font-weight:600; padding:7px 14px; border-radius:99px; cursor:pointer; white-space:nowrap; transition:all 0.2s; flex-shrink:0; }
+    .date-tab:hover { border-color:var(--green); color:var(--green); }
+    .date-tab.active { background:rgba(29,185,84,0.15); border-color:var(--green); color:var(--green); }
+
     /* ── RESULTS SCROLL ── */
-    .results-section { width:100%; max-width:720px; padding:20px 20px 0; }
+    .results-section { width:100%; max-width:720px; padding:12px 20px 0; }
     .results-label { font-size:0.72rem; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
     .results-label .dot { width:6px; height:6px; background:var(--red); border-radius:50%; animation:blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
     .results-scroll { display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; }
     .results-scroll::-webkit-scrollbar { display:none; }
-    .match-card { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(12px); border-radius:var(--radius); padding:12px 16px; min-width:200px; flex-shrink:0; text-align:center; }
+    .match-card { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(12px); border-radius:var(--radius); padding:12px 16px; min-width:180px; flex-shrink:0; text-align:center; }
+    .match-card.upcoming { border-color:rgba(249,115,22,0.3); }
     .match-teams { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
     .team-flag { font-size:1.4rem; }
-    .score { font-size:1.1rem; font-weight:900; color:var(--green); padding:2px 10px; background:rgba(29,185,84,0.12); border-radius:6px; border:1px solid rgba(29,185,84,0.25); }
-    .match-info { font-size:0.68rem; color:var(--muted); }
-    .loading-card { background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius); padding:16px 24px; min-width:200px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:0.8rem; gap:8px; }
+    .score { font-size:1rem; font-weight:900; color:var(--green); padding:2px 10px; background:rgba(29,185,84,0.12); border-radius:6px; border:1px solid rgba(29,185,84,0.25); }
+    .score.upcoming { color:#f97316; background:rgba(249,115,22,0.12); border-color:rgba(249,115,22,0.25); font-size:0.8rem; }
+    .match-info { font-size:0.68rem; color:var(--muted); margin-top:4px; }
+    .team-names { display:flex; justify-content:space-between; font-size:0.68rem; color:var(--muted); margin-top:4px; }
+    .no-matches { color:var(--muted); font-size:0.85rem; padding:16px; }
 
     /* ── VIDEOS ── */
     .videos-section { width:100%; max-width:720px; padding:20px 20px 0; }
@@ -62,8 +66,6 @@
     .videos-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .video-box { background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius); overflow:hidden; position:relative; padding-bottom:56.25%; height:0; }
     .video-box iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
-    .video-placeholder { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--muted); font-size:0.78rem; }
-    .video-placeholder span { font-size:2rem; }
     @media(max-width:520px) { .videos-grid { grid-template-columns:1fr; } }
 
     /* ── CHIPS ── */
@@ -91,7 +93,8 @@
     textarea:focus { border-color:var(--green); }
     .send-btn { background:linear-gradient(135deg,var(--green),#16a34a); color:#fff; border:none; border-radius:var(--radius); width:50px; height:50px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s,transform 0.1s; flex-shrink:0; box-shadow:0 4px 20px rgba(29,185,84,0.35); }
     .send-btn:hover{opacity:0.88} .send-btn:active{transform:scale(0.95)} .send-btn:disabled{opacity:0.35;cursor:not-allowed}
-    footer { margin-top:auto; padding:16px; font-size:0.72rem; color:var(--muted); text-align:center; }
+    footer { margin-top:auto; padding:20px; color:#aaa; font-size:14px; text-align:center; }
+    footer p { margin:5px 0; }
     @media(max-width:480px){header{padding:14px 18px} .hero{padding:30px 16px 12px}}
   </style>
 </head>
@@ -131,37 +134,37 @@
   <div class="flags">🇧🇷 🇩🇪 🇦🇷 🇫🇷 🇪🇸 🇵🇹 🇮🇷 🇺🇸</div>
 </section>
 
+<!-- DATE NAV -->
+<div class="date-nav">
+  <div class="date-tabs" id="dateTabs"></div>
+</div>
+
 <!-- RESULTS SCROLL -->
 <div class="results-section">
-  <p class="results-label"><span class="dot"></span> نتایج زنده جام جهانی ۲۰۲۶</p>
+  <p class="results-label"><span class="dot"></span> <span id="resultsTitle">نتایج بازی‌ها</span></p>
   <div class="results-scroll" id="resultsScroll">
-    <div class="loading-card">⏳ در حال بارگذاری...</div>
+    <div class="no-matches">در حال بارگذاری...</div>
   </div>
 </div>
 
 <!-- VIDEOS -->
 <div class="videos-section">
-  <p class="videos-label">📺 ویدیوهای برگزیده</p>
+  <p class="videos-label">📺 ویدیوهای برگزیده — کانال رسمی FIFA</p>
   <div class="videos-grid">
-    <!-- ویدیو ۱ - لینک یوتیوب خودت رو جایگزین کن -->
     <div class="video-box">
-      <div class="video-placeholder"><span>🎬</span><p>ویدیو ۱</p></div>
-      <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe> -->
+      <iframe src="https://www.youtube.com/embed/j0BQN0nJ7mM" allowfullscreen></iframe>
     </div>
-    <!-- ویدیو ۲ -->
     <div class="video-box">
-      <div class="video-placeholder"><span>🎬</span><p>ویدیو ۲</p></div>
-      <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe> -->
+      <iframe src="https://www.youtube.com/embed/BVuXxylCcRo" allowfullscreen></iframe>
     </div>
-    <!-- ویدیو ۳ -->
     <div class="video-box">
-      <div class="video-placeholder"><span>🎬</span><p>ویدیو ۳</p></div>
-      <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe> -->
+      <iframe src="https://www.youtube.com/embed/0XtNAQiyaX4" allowfullscreen></iframe>
     </div>
-    <!-- ویدیو ۴ -->
     <div class="video-box">
-      <div class="video-placeholder"><span>🎬</span><p>ویدیو ۴</p></div>
-      <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID_4" allowfullscreen></iframe> -->
+      <iframe src="https://www.youtube.com/embed/RR1QMWchMXs" allowfullscreen></iframe>
+    </div>
+    <div class="video-box">
+      <iframe src="https://www.youtube.com/embed/4zYJyJY57i8" allowfullscreen></iframe>
     </div>
   </div>
 </div>
@@ -183,10 +186,10 @@
   </div>
 </div>
 
-<footer style="text-align: center; padding: 20px; color: #aaa; font-size: 14px; margin-top: 50px;">
-    <p style="margin: 5px 0;">تمامی حقوق محتوای ویدیویی متعلق به فدراسیون جهانی فوتبال (فیفا) می‌باشد.</p>
-    <p style="margin: 5px 0;">این سایت یک وب‌سایت مستقل خبری است و وابسته به فیفا نمی‌باشد.</p>
-    <p style="margin: 5px 0; color: #666; font-size: 12px;">منبع ویدیوها: کانال رسمی فیفا در یوتیوب</p>
+<footer>
+  <p>تمامی حقوق محتوای ویدیویی متعلق به فدراسیون جهانی فوتبال (فیفا) می‌باشد.</p>
+  <p>این سایت یک وب‌سایت مستقل خبری است و وابسته به فیفا نمی‌باشد.</p>
+  <p style="color:#666;font-size:12px">منبع ویدیوها: کانال رسمی فیفا در یوتیوب</p>
 </footer>
 
 <script>
@@ -195,35 +198,90 @@
   const sendBtn = document.getElementById('sendBtn');
   let history = [];
 
-  // ── نتایج زنده ──
-  const RAPID_KEY = '1bc7902d8emsh7a004c894db3733p10d356jsnd473a3860105';
+  // ── داده‌های بازی‌ها به تفکیک تاریخ ──
+  const matchData = {
+    '2026-06-19': [
+      { home:'🇮🇷 ایران', away:'بلژیک 🇧🇪', score:'1 - 1', info:'گروه G', done:true },
+      { home:'🇪🇬 مصر', away:'نیوزلند 🇳🇿', score:'3 - 1', info:'گروه G', done:true },
+    ],
+    '2026-06-20': [
+      { home:'🇦🇷 آرژانتین', away:'اتریش 🇦🇹', score:'2 - 0', info:'گروه J', done:true },
+      { home:'🇺🇾 اروگوئه', away:'کیپ ورد 🇨🇻', score:'2 - 2', info:'گروه H', done:true },
+      { home:'🇩🇪 آلمان', away:'عربستان 🇸🇦', score:'7 - 0', info:'گروه H', done:true },
+    ],
+    '2026-06-21': [
+      { home:'🇫🇷 فرانسه', away:'سنگال 🇸🇳', score:'3 - 1', info:'گروه I', done:true },
+      { home:'🇳🇴 نروژ', away:'عراق 🇮🇶', score:'4 - 1', info:'گروه I', done:true },
+    ],
+    '2026-06-22': [
+      { home:'🇧🇷 برزیل', away:'مراکش 🇲🇦', score:'1 - 1', info:'گروه E', done:true },
+      { home:'🇺🇸 آمریکا', away:'پاراگوئه 🇵🇾', score:'4 - 1', info:'گروه D', done:true },
+    ],
+    '2026-06-23': [
+      { home:'🇪🇸 اسپانیا', away:'کامرون 🇨🇲', score:'', info:'گروه B · ۲۳:۰۰', done:false },
+      { home:'🇵🇹 پرتغال', away:'زیمبابوه 🇿🇼', score:'', info:'گروه C · ۲۰:۰۰', done:false },
+      { home:'🇯🇵 ژاپن', away:'اکوادور 🇪🇨', score:'', info:'گروه F · ۱۷:۰۰', done:false },
+    ],
+    '2026-06-24': [
+      { home:'🇳🇱 هلند', away:'پاناما 🇵🇦', score:'', info:'گروه A · ۲۰:۰۰', done:false },
+      { home:'🇲🇦 مراکش', away:'تانزانیا 🇹🇿', score:'', info:'گروه E · ۲۳:۰۰', done:false },
+    ],
+    '2026-06-25': [
+      { home:'🇰🇷 کره جنوبی', away:'کاستاریکا 🇨🇷', score:'', info:'گروه C · ۲۰:۰۰', done:false },
+      { home:'🇲🇽 مکزیک', away:'کوبا 🇨🇺', score:'', info:'گروه A · ۲۳:۰۰', done:false },
+    ],
+  };
 
-  // نتایج نمونه جام جهانی ۲۰۲۶ (واقعی)
-  const wc2026Results = [
-    { home:'🇮🇷 ایران', away:'بلژیک 🇧🇪', score:'1 - 1', info:'گروه G' },
-    { home:'🇪🇬 مصر', away:'نیوزلند 🇳🇿', score:'3 - 1', info:'گروه G' },
-    { home:'🇺🇾 اروگوِیه',away:'کیپ ورد 🇨🇻',score:'2 - 2',info:'گروه H' },
-    { home:'🇦🇷 آرژانتین',away:'اتریش 🇦🇹',score:'2 - 0',info:'گروه J'},
-    
-  ];
+  const dateLabels = {
+    '2026-06-19': 'جمعه ۲۹ خرداد',
+    '2026-06-20': 'شنبه ۳۰ خرداد',
+    '2026-06-21': 'یکشنبه ۳۱ خرداد',
+    '2026-06-22': 'دوشنبه ۱ تیر',
+    '2026-06-23': 'سه‌شنبه ۲ تیر (امروز)',
+    '2026-06-24': 'چهارشنبه ۳ تیر (فردا)',
+    '2026-06-25': 'پنجشنبه ۴ تیر',
+  };
 
-  function renderResults() {
+  let activeDate = '2026-06-23';
+
+  function renderDateTabs() {
+    const tabs = document.getElementById('dateTabs');
+    tabs.innerHTML = '';
+    Object.keys(dateLabels).forEach(date => {
+      const btn = document.createElement('button');
+      btn.className = 'date-tab' + (date === activeDate ? ' active' : '');
+      btn.textContent = dateLabels[date];
+      btn.onclick = () => { activeDate = date; renderDateTabs(); renderMatches(); };
+      tabs.appendChild(btn);
+    });
+  }
+
+  function renderMatches() {
     const scroll = document.getElementById('resultsScroll');
+    const title = document.getElementById('resultsTitle');
+    const matches = matchData[activeDate] || [];
+    const hasResults = matches.some(m => m.done);
+    title.textContent = hasResults ? 'نتایج بازی‌ها' : 'برنامه بازی‌ها';
     scroll.innerHTML = '';
-    wc2026Results.forEach(m => {
+    if (matches.length === 0) {
+      scroll.innerHTML = '<div class="no-matches">بازی‌ای برای این روز ثبت نشده</div>';
+      return;
+    }
+    matches.forEach(m => {
       const card = document.createElement('div');
-      card.className = 'match-card';
+      card.className = 'match-card' + (!m.done ? ' upcoming' : '');
+      const homeFlag = m.home.split(' ')[0];
+      const awayFlag = m.away.split(' ').pop();
+      const homeName = m.home.substring(2).trim();
+      const awayName = m.away.replace(/[\u{1F1E0}-\u{1F1FF}]{2}/gu, '').trim();
       card.innerHTML = `
         <div class="match-teams">
-          <span class="team-flag">${m.home.split(' ')[0]}</span>
-          <span class="score">${m.score}</span>
-          <span class="team-flag">${m.away.split(' ').pop()}</span>
+          <span class="team-flag">${homeFlag}</span>
+          <span class="score ${!m.done ? 'upcoming' : ''}">${m.done ? m.score : 'برنامه'}</span>
+          <span class="team-flag">${awayFlag}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:4px">
-          <span>${m.home.substring(2).trim()}</span>
-          <span>${m.away.replace(/🇦-🇿]/g,'').trim()}</span>
-        </div>
-        <div class="match-info" style="margin-top:4px">${m.info}</div>
+        <div class="team-names"><span>${homeName}</span><span>${awayName}</span></div>
+        <div class="match-info">${m.info}</div>
       `;
       scroll.appendChild(card);
     });
@@ -234,7 +292,7 @@
   function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
   function fillQ(text) { inputEl.value=text; autoGrow(inputEl); inputEl.focus(); }
 
-  function addMsg(role,text) {
+  function addMsg(role, text) {
     const wrap=document.createElement('div'); wrap.className=`msg ${role==='user'?'user':'ai'}`;
     const av=document.createElement('div'); av.className=`avatar ${role==='user'?'user-av':'ai'}`; av.textContent=role==='user'?'👤':'⚽';
     const bubble=document.createElement('div'); bubble.className='bubble';
@@ -280,7 +338,8 @@
   }
 
   window.onload=()=>{
-    renderResults();
+    renderDateTabs();
+    renderMatches();
     addMsg('ai','سلام! من فوتبال‌یارم ⚽🏆\nخوش اومدی به تحلیلگر هوشمند جام جهانی ۲۰۲۶!\nهر سوالی درباره تیم‌ها، بازیکنان، پیش‌بینی‌ها و تاکتیک‌ها داری بپرس.');
   };
 </script>
