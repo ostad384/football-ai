@@ -24,26 +24,29 @@
       overflow-x: hidden;
     }
 
-    /* انیمیشن تلگرام‌مانند */
+    /* انیمیشن پیشرفته شبیه به تغییر تم تلگرام */
     .theme-overlay {
       position: fixed;
-      inset: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
       z-index: 9999;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.5s ease;
     }
     .theme-overlay.flash {
-      opacity: 1;
-      animation: themeFlash 0.6s ease forwards;
+      animation: telegramExpand 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
     }
-    @keyframes themeFlash {
-      0%   { opacity: 0; }
-      20%  { opacity: 0.35; }
-      100% { opacity: 0; }
+    @keyframes telegramExpand {
+      0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+      50%  { opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(400); opacity: 0; }
     }
 
-    body.transitioning * { transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, opacity 0.5s ease !important; }
+    body.transitioning * { transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, opacity 0.4s ease !important; }
 
     /* حالت روز */
     body.day {
@@ -57,7 +60,7 @@
     body.day header { background: rgba(255,255,255,0.45); backdrop-filter: blur(20px); border-color: rgba(255,255,255,0.6); }
     body.day .logo .bro { color: #1a1a2e !important; }
     body.day .badge { background: rgba(255,255,255,0.35); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.5); color: #1a1a2e; }
-    body.day .theme-toggle { background: rgba(255,255,255,0.40); border-color: rgba(255,255,255,0.65); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(0,0,0,0.08); }
+    body.day .theme-toggle { background: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
     body.day .date-tab { background: rgba(255,255,255,0.35); backdrop-filter: blur(10px); border-color: rgba(255,255,255,0.5); color: #475569; }
     body.day .match-card { background: rgba(255,255,255,0.35); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.55); color: #1a1a2e; }
     body.day .match-info, body.day .team-names { color: #64748b; }
@@ -118,30 +121,35 @@
 
     .header-right { display:flex; align-items:center; gap:10px; }
 
-    /* دکمه روز/شب شیشه‌ای فوق‌العاده شفاف ارتقا یافته */
+    /* دکمه تم کاملاً شیشه‌ای به همراه شیشه‌ای کردن خود ایموجی‌ها */
     .theme-toggle {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 99px;
       width: 44px;
       height: 44px;
       cursor: pointer;
-      font-size: 1.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
       overflow: hidden;
     }
     .theme-toggle:hover { 
-      border-color: rgba(255, 255, 255, 0.35); 
-      background: rgba(255, 255, 255, 0.1);
-      transform: scale(1.08); 
+      border-color: rgba(255, 255, 255, 0.3); 
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.05); 
     }
-    .toggle-icon { transition: opacity 0.4s ease, transform 0.4s ease; display: flex; align-items: center; justify-content: center; }
+    /* استایل شیشه‌ای و نیمه‌شفاف کردن خود ایموجی‌ها */
+    .toggle-icon { 
+      font-size: 1.25rem;
+      opacity: 0.75; 
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)) saturate(120%);
+      transition: opacity 0.3s, transform 0.3s;
+    }
 
     /* HERO */
     .hero { text-align:center; padding:48px 24px 20px; max-width:640px; }
@@ -304,7 +312,7 @@
 <div class="chips">
   <button class="chip" onclick="fillQ('بهترین تیم‌های جام جهانی ۲۰۲۶ کدوما هستن؟')">🏆 برترین‌های جام جهانی</button>
   <button class="chip" onclick="fillQ('رونالدو و مسی رو مقایسه کن')">🆚 رونالدو vs مسی</button>
-  <button class="chip" onclick="fillQ('شانس قهرمانی برزیل در جام جهانی چقدره Mom؟')">🇧🇷 شانس برزیل</button>
+  <button class="chip" onclick="fillQ('شانس قهرمانی برزیل در جام جهانی چقدره؟')">🇧🇷 شانس برزیل</button>
   <button class="chip" onclick="fillQ('بهترین فرمیشن برای تیمی که می‌خواد پرس بالا بزنه چیه؟')">📐 فرمیشن پرس بالا</button>
   <button class="chip" onclick="fillQ('ایران در جام جهانی ۲۰۲۶ چه شانسی داره؟')">🇮🇷 شانس ایران</button>
 </div>
@@ -325,11 +333,15 @@
 </footer>
 
 <script>
+  // ── تنظیمات دو آدرس API مجزا ──
+  const CHAT_API = 'https://exciting-unity-production-1801.up.railway.app/chat';
+  const MATCHES_API = 'https://exciting-unity-production-1801.up.railway.app/matches';
+
   const messagesEl = document.getElementById('messages');
   const inputEl = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
   let history = [];
-  let matchData = {}; // پر شدن داینامیک از API
+  let matchData = {};
 
   const dateLabels = {
     '2026-06-19': 'جمعه ۲۹ خرداد',
@@ -343,43 +355,47 @@
 
   let activeDate = '2026-06-23';
 
-  // ── THEME ──
+  // ── انیمیشن تلگرامی تغییر تم ──
   function toggleTheme() {
     const overlay = document.getElementById('themeOverlay');
     const isDay = !document.body.classList.contains('day');
     
-    overlay.style.background = isDay ? 'rgba(255,255,240,0.6)' : 'rgba(5,8,15,0.6)';
+    // رنگ‌آمیزی دایره موج انیمیشن بر اساس مقصد
+    overlay.style.background = isDay ? '#eef2ff' : '#05080f';
+    overlay.classList.remove('flash');
+    void overlay.offsetWidth; // ریست رندر انیمیشن
     overlay.classList.add('flash');
-    setTimeout(() => overlay.classList.remove('flash'), 600);
 
     document.body.classList.add('transitioning');
-    document.body.classList.toggle('day');
+    
+    // همگام‌سازی زمان اعمال تم با وسط انیمیشن تلگرامی
+    setTimeout(() => {
+      document.body.classList.toggle('day');
+      const nightIcon = document.querySelector('.night-icon');
+      const dayIcon = document.querySelector('.day-icon');
+      if (isDay) {
+        nightIcon.style.display = 'none';
+        dayIcon.style.display = 'flex';
+      } else {
+        nightIcon.style.display = 'flex';
+        dayIcon.style.display = 'none';
+      }
+    }, 250);
 
-    const nightIcon = document.querySelector('.night-icon');
-    const dayIcon = document.querySelector('.day-icon');
-    if (isDay) {
-      nightIcon.style.display = 'none';
-      dayIcon.style.display = 'inline';
-    } else {
-      nightIcon.style.display = 'inline';
-      dayIcon.style.display = 'none';
-    }
-
-    setTimeout(() => document.body.classList.remove('transitioning'), 500);
+    setTimeout(() => document.body.classList.remove('transitioning'), 600);
   }
 
-  // ── دریافت نتایج واقعی از API ──
+  // ── دریافت نتایج واقعی از API بازی‌ها ──
   async function fetchLiveMatches() {
     try {
-      const res = await fetch('https://exciting-unity-production-1801.up.railway.app/matches');
-      if (!res.ok) throw new Error('API Network Error');
+      const res = await fetch(MATCHES_API);
+      if (!res.ok) throw new Error('Matches API Error');
       const data = await res.json();
       if(data && Object.keys(data).length > 0) {
         matchData = data;
       }
     } catch(err) {
-      console.log('خطا در بارگذاری مستقیم نتایج زنده، استفاده از فال‌بک موقت.');
-      // بک آپ در صورتی که دیتایی در پس‌زمینه سرور نباشد
+      console.log('ارتباط مستقیم با API مسابقات برقرار نشد. استفاده از حافظه موقت.');
       matchData = {
         '2026-06-23': [
           { home:'🇪🇸 اسپانیا', away:'کامرون 🇨🇲', score:'', info:'گروه B · ۲۳:۰۰', done:false },
@@ -463,6 +479,7 @@
 
   function removeTyping() { const el=document.getElementById('typing-indicator'); if(el) el.remove(); }
 
+  // ── ارسال پیام به API هوش مصنوعی ──
   async function sendMessage() {
     const text=inputEl.value.trim();
     if(!text||sendBtn.disabled) return;
@@ -471,7 +488,7 @@
     inputEl.value=''; inputEl.style.height='auto';
     sendBtn.disabled=true; showTyping();
     try {
-      const res=await fetch('https://exciting-unity-production-1801.up.railway.app/chat',{
+      const res=await fetch(CHAT_API,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({messages:history})
@@ -481,11 +498,10 @@
       const reply=data?.reply||'مشکلی پیش اومد، دوباره امتحان کن.';
       addMsg('ai',reply);
       history.push({role:'assistant',content:reply});
-    } catch(err) { removeTyping(); addMsg('ai','❌ خطا در اتصال. لطفاً دوباره امتحان کن.'); }
+    } catch(err) { removeTyping(); addMsg('ai','❌ خطا در اتصال به هوش مصنوعی. لطفاً دوباره امتحان کن.'); }
     sendBtn.disabled=false; inputEl.focus();
   }
 
-  // ── drag scroll ──
   function addDragScroll(el) {
     let isDown = false, startX, scrollLeft;
     el.addEventListener('mousedown', e => { isDown=true; el.style.cursor='grabbing'; startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; });
@@ -495,7 +511,7 @@
   }
 
   window.onload=()=>{
-    fetchLiveMatches(); // فراخوانی نتایج زنده هنگام لود شدن صفحه
+    fetchLiveMatches();
     addDragScroll(document.getElementById('resultsScroll'));
     addDragScroll(document.getElementById('dateTabs'));
     addMsg('ai','سلام! من FotBro هستم ⚽🏆\nخوش اومدی به تحلیلگر هوشمند جام جهانی ۲۰۲۶!\nهر سوالی درباره تیم‌ها، بازیکنان، پیش‌بینی‌ها و تاکتیک‌ها داری بپرس.');
