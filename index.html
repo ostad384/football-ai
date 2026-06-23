@@ -156,26 +156,23 @@
     /* HERO */
     .hero { text-align:center; padding:48px 24px 20px; max-width:640px; }
 
-    /* استایل اصلاح شده کامپوننت تصویر لوگو */
+    /* استایل جدید لوگو: بزرگ‌تر و بدون بک‌گراند شیشه‌ای */
     .wc-logo-box {
-      width: 85px;
-      height: 85px;
+      width: 120px;            /* افزایش سایز باکس */
+      height: 120px;           /* افزایش سایز باکس */
       margin: 0 auto 16px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      background: transparent !important; /* حذف زمینه شیشه‌ای */
+      border: none !important;            /* حذف حاشیه */
+      box-shadow: none !important;        /* حذف سایه */
     }
     .wc-logo-box img {
-      width: 70%;
-      height: 70%;
+      width: 100%;             /* پر کردن کامل باکس برای ابعاد بزرگ‌تر */
+      height: 100%;            /* پر کردن کامل باکس */
       object-fit: contain;
     }
-    body.day .wc-logo-box { background: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.05); }
 
     .wc-fifa {
       display: block;
