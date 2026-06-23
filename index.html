@@ -3,17 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>فوتبال‌یار | تحلیل هوشمند فوتبال</title>
+  <title>FotBro | تحلیل هوشمند فوتبال</title>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #05080f; --red: #e8182b; --green: #1db954; --blue: #1a6fe8;
-      --gold: #ffd700; --white: #f1f5f9; --muted: #64748b;
-      --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.10); --radius: 14px;
+      --white: #f1f5f9; --muted: #64748b;
+      --glass: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.12); --radius: 14px;
     }
-    body { font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-    .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* حالت روز */
+    body.day {
+      background: #eef2ff;
+      color: #1a1a2e;
+    }
+    body.day .bg-blobs { opacity: 1 !important; }
+    body.day .blob-red { background: radial-gradient(circle, #ff6b6b, #e8182b); opacity: 0.35 !important; filter: blur(100px); }
+    body.day .blob-green { background: radial-gradient(circle, #6bcb77, #1db954); opacity: 0.30 !important; filter: blur(100px); }
+    body.day .blob-blue { background: radial-gradient(circle, #6b9fff, #1a6fe8); opacity: 0.30 !important; filter: blur(100px); }
+    body.day header { background: rgba(255,255,255,0.45); backdrop-filter: blur(20px); border-color: rgba(255,255,255,0.6); }
+    body.day .logo .bro { color: #1a1a2e !important; }
+    body.day .badge { background: rgba(255,255,255,0.35); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.5); color: #1a1a2e; }
+    body.day .theme-toggle { background: rgba(255,255,255,0.35); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.5); }
+    body.day .date-tab { background: rgba(255,255,255,0.35); backdrop-filter: blur(10px); border-color: rgba(255,255,255,0.5); color: #475569; }
+    body.day .match-card { background: rgba(255,255,255,0.35); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.55); color: #1a1a2e; }
+    body.day .match-info, body.day .team-names { color: #64748b; }
+    body.day .chip { background: rgba(255,255,255,0.35); backdrop-filter: blur(10px); border-color: rgba(255,255,255,0.5); color: #475569; }
+    body.day .msg.ai .bubble { background: rgba(255,255,255,0.4); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.55); color: #1a1a2e; }
+    body.day textarea { background: rgba(255,255,255,0.4); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.5); color: #1a1a2e; }
+    body.day .hero-sub { color: #475569; }
+    body.day .results-label, body.day .videos-label { color: #64748b; }
+
+    .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; transition: opacity 0.4s; }
     .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15; animation: float 8s ease-in-out infinite; }
     .blob-red { width:450px; height:450px; background:var(--red); top:-100px; right:-80px; }
     .blob-green { width:380px; height:380px; background:var(--green); bottom:0; left:-60px; animation-delay:3s; }
@@ -21,34 +55,95 @@
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
     * { position: relative; z-index: 1; }
 
-    header { width:100%; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); backdrop-filter:blur(20px); border-bottom:1px solid var(--glass-border); }
-    .logo { font-size:1.3rem; font-weight:900; }
-    .logo span { color:var(--green); }
-    .badge { background:linear-gradient(135deg,var(--red),var(--blue)); color:#fff; font-size:0.65rem; font-weight:700; padding:4px 12px; border-radius:99px; letter-spacing:1px; }
+    /* HEADER */
+    header { width:100%; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); backdrop-filter:blur(20px); border-bottom:1px solid var(--glass-border); }
 
-    .hero { text-align:center; padding:44px 24px 16px; max-width:640px; }
-    .trophy-svg-wrap { display:flex; justify-content:center; margin-bottom:18px; animation:trophy-pulse 2.5s ease-in-out infinite alternate; }
-    @keyframes trophy-pulse { from{filter:drop-shadow(0 0 10px rgba(255,215,0,0.35));transform:scale(1)} to{filter:drop-shadow(0 0 36px rgba(255,215,0,0.85));transform:scale(1.05)} }
-    .wc-label { font-size:0.65rem; font-weight:700; letter-spacing:3px; text-transform:uppercase; background:linear-gradient(90deg,var(--red),var(--green),var(--blue)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:14px; display:block; }
-    .hero h1 { font-size:clamp(1.8rem,5.5vw,2.8rem); font-weight:900; line-height:1.15; margin-bottom:12px; }
-    .hero h1 span { color:var(--green); }
-    .hero p { font-size:0.93rem; color:var(--muted); line-height:1.7; }
-    .flags { font-size:1.5rem; letter-spacing:4px; margin-top:14px; opacity:0.8; }
+    .logo { font-size:1.5rem; font-weight:900; letter-spacing:-1px; font-family:'Arial Black', sans-serif; }
+    .logo .fot { color: var(--green); }
+    .logo .bro { color: var(--white); }
+    body.day .logo .bro { color: #e2e8f0; }
 
-    /* ── DATE NAV ── */
+    .header-right { display:flex; align-items:center; gap:10px; }
+
+    .badge {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 99px;
+      letter-spacing: 1px;
+    }
+
+    /* دکمه روز/شب فقط آیکون */
+    .theme-toggle {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 99px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--green); transform: scale(1.1); }
+
+    /* HERO */
+    .hero { text-align:center; padding:48px 24px 20px; max-width:640px; }
+
+    .wc-fifa {
+      display: block;
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-weight: 700;
+      letter-spacing: 4px;
+      background: linear-gradient(90deg, #FFE066, #FFD700, #C8960C, #FFD700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .wc-countries {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 900;
+      font-family: 'Arial Black', sans-serif;
+      white-space: nowrap;
+      margin-bottom: 16px;
+      flex-wrap: nowrap;
+    }
+    .wc-usa { color: #3b82f6; }
+    .wc-canada { color: #ef4444; }
+    .wc-mexico { color: #22c55e; }
+    .wc-dot { color: var(--muted); font-size: 0.5em; font-weight: 400; }
+
+    .hero-sub { font-size:0.93rem; color:var(--muted); line-height:1.7; margin-bottom:14px; }
+    .flags { font-size:1.5rem; letter-spacing:4px; opacity:0.85; }
+
+    /* DATE NAV */
     .date-nav { width:100%; max-width:720px; padding:20px 20px 0; }
-    .date-tabs { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
+    .date-tabs { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; cursor:grab; }
     .date-tabs::-webkit-scrollbar { display:none; }
     .date-tab { background:var(--glass); border:1px solid var(--glass-border); color:var(--muted); font-family:'Vazirmatn',sans-serif; font-size:0.75rem; font-weight:600; padding:7px 14px; border-radius:99px; cursor:pointer; white-space:nowrap; transition:all 0.2s; flex-shrink:0; }
     .date-tab:hover { border-color:var(--green); color:var(--green); }
     .date-tab.active { background:rgba(29,185,84,0.15); border-color:var(--green); color:var(--green); }
 
-    /* ── RESULTS SCROLL ── */
+    /* RESULTS */
     .results-section { width:100%; max-width:720px; padding:12px 20px 0; }
     .results-label { font-size:0.72rem; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
     .results-label .dot { width:6px; height:6px; background:var(--red); border-radius:50%; animation:blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-    .results-scroll { display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; }
+    .results-scroll { display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; cursor:grab; }
     .results-scroll::-webkit-scrollbar { display:none; }
     .match-card { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(12px); border-radius:var(--radius); padding:12px 16px; min-width:180px; flex-shrink:0; text-align:center; }
     .match-card.upcoming { border-color:rgba(249,115,22,0.3); }
@@ -60,27 +155,23 @@
     .team-names { display:flex; justify-content:space-between; font-size:0.68rem; color:var(--muted); margin-top:4px; }
     .no-matches { color:var(--muted); font-size:0.85rem; padding:16px; }
 
-    /* ── VIDEOS ── */
-    .videos-section { width:100%; max-width:720px; padding:20px 20px 0; }
-    .videos-label { font-size:0.72rem; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
-    .videos-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .video-box { background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius); overflow:hidden; position:relative; padding-bottom:56.25%; height:0; }
-    .video-box iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
-    @media(max-width:520px) { .videos-grid { grid-template-columns:1fr; } }
-
-    /* ── CHIPS ── */
+    /* CHIPS */
     .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:20px 24px 24px; }
     .chip { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(12px); color:var(--muted); font-size:0.8rem; padding:7px 16px; border-radius:99px; cursor:pointer; transition:all 0.2s; font-family:'Vazirmatn',sans-serif; }
     .chip:hover { border-color:var(--green); color:var(--green); background:rgba(29,185,84,0.08); }
 
-    /* ── CHAT ── */
+    /* CHAT */
     .chat-wrap { width:100%; max-width:720px; padding:0 20px 40px; display:flex; flex-direction:column; gap:16px; }
     .messages { display:flex; flex-direction:column; gap:14px; min-height:80px; }
     .msg { display:flex; gap:10px; align-items:flex-start; }
     .msg.user { flex-direction:row-reverse; }
-    .avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
-    .avatar.ai { background:linear-gradient(135deg,var(--red),var(--blue)); }
-    .avatar.user-av { background:var(--glass); border:1px solid var(--glass-border); }
+    .avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:900; flex-shrink:0; font-family:'Arial Black',sans-serif; }
+    .avatar.ai {
+      background: linear-gradient(135deg, #1db954, #1a6fe8);
+      color: white;
+      letter-spacing: -0.5px;
+    }
+    .avatar.user-av { background:var(--glass); border:1px solid var(--glass-border); font-size:1rem; }
     .bubble { max-width:80%; padding:12px 16px; border-radius:var(--radius); font-size:0.88rem; line-height:1.75; }
     .msg.ai .bubble { background:var(--glass); border:1px solid var(--glass-border); backdrop-filter:blur(16px); border-top-right-radius:4px; }
     .msg.user .bubble { background:linear-gradient(135deg,var(--blue),#2563eb); color:#fff; border-top-left-radius:4px; }
@@ -93,9 +184,10 @@
     textarea:focus { border-color:var(--green); }
     .send-btn { background:linear-gradient(135deg,var(--green),#16a34a); color:#fff; border:none; border-radius:var(--radius); width:50px; height:50px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center; transition:opacity 0.2s,transform 0.1s; flex-shrink:0; box-shadow:0 4px 20px rgba(29,185,84,0.35); }
     .send-btn:hover{opacity:0.88} .send-btn:active{transform:scale(0.95)} .send-btn:disabled{opacity:0.35;cursor:not-allowed}
-    footer { margin-top:auto; padding:20px; color:#aaa; font-size:14px; text-align:center; }
-    footer p { margin:5px 0; }
-    @media(max-width:480px){header{padding:14px 18px} .hero{padding:30px 16px 12px}}
+
+    footer { margin-top:auto; padding:20px; color:#666; font-size:13px; text-align:center; }
+    footer p { margin:4px 0; }
+    @media(max-width:480px){ header{padding:12px 16px} .hero{padding:32px 16px 14px} .logo{font-size:1.3rem} .wc-countries{font-size:clamp(1.4rem,5vw,2rem)} }
   </style>
 </head>
 <body>
@@ -107,30 +199,23 @@
 </div>
 
 <header>
-  <div class="logo">⚽ فوتبال<span>یار</span></div>
-  <span class="badge">جام جهانی ۲۰۲۶</span>
+  <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
+  <div class="header-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <span class="badge">جام جهانی ۲۰۲۶</span>
+  </div>
 </header>
 
 <section class="hero">
-  <div class="trophy-svg-wrap">
-    <svg width="110" height="150" viewBox="0 0 110 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="22" y="132" width="66" height="10" rx="4" fill="url(#g)"/>
-      <rect x="30" y="122" width="50" height="12" rx="3" fill="url(#g)"/>
-      <rect x="46" y="100" width="18" height="24" rx="3" fill="url(#g)"/>
-      <path d="M20 20 Q18 60 30 80 Q40 95 55 98 Q70 95 80 80 Q92 60 90 20 Z" fill="url(#g)"/>
-      <path d="M30 25 Q28 55 38 72" stroke="rgba(255,255,255,0.35)" stroke-width="3" stroke-linecap="round"/>
-      <path d="M20 30 Q4 30 4 50 Q4 68 20 65" stroke="url(#g)" stroke-width="7" stroke-linecap="round" fill="none"/>
-      <path d="M90 30 Q106 30 106 50 Q106 68 90 65" stroke="url(#g)" stroke-width="7" stroke-linecap="round" fill="none"/>
-      <text x="55" y="55" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.9)">★</text>
-      <text x="55" y="78" text-anchor="middle" font-size="8" font-weight="bold" fill="rgba(255,255,255,0.85)" font-family="Arial">2026</text>
-      <line x1="30" y1="40" x2="80" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-      <line x1="26" y1="55" x2="84" y2="55" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFE066"/><stop offset="40%" stop-color="#FFD700"/><stop offset="70%" stop-color="#C8960C"/><stop offset="100%" stop-color="#FFD700"/></linearGradient></defs>
-    </svg>
+  <span class="wc-fifa">FIFA WORLD CUP 2026</span>
+  <div class="wc-countries">
+    <span class="wc-usa">USA</span>
+    <span class="wc-dot">·</span>
+    <span class="wc-canada">CANADA</span>
+    <span class="wc-dot">·</span>
+    <span class="wc-mexico">MEXICO</span>
   </div>
-  <span class="wc-label">FIFA World Cup 2026 · USA · Canada · Mexico</span>
-  <h1>هر سوال فوتبالی داری،<br/><span>اینجا جواب داره</span></h1>
-  <p>تحلیل بازیکن، مقایسه تیم‌ها، پیش‌بینی بازی و هر چیز دیگه‌ای درباره فوتبال رو بپرس.</p>
+  <p class="hero-sub">تحلیل بازیکن، مقایسه تیم‌ها، پیش‌بینی بازی و هر چیز دیگه‌ای درباره فوتبال رو بپرس.</p>
   <div class="flags">🇧🇷 🇩🇪 🇦🇷 🇫🇷 🇪🇸 🇵🇹 🇮🇷 🇺🇸</div>
 </section>
 
@@ -139,33 +224,11 @@
   <div class="date-tabs" id="dateTabs"></div>
 </div>
 
-<!-- RESULTS SCROLL -->
+<!-- RESULTS -->
 <div class="results-section">
   <p class="results-label"><span class="dot"></span> <span id="resultsTitle">نتایج بازی‌ها</span></p>
   <div class="results-scroll" id="resultsScroll">
     <div class="no-matches">در حال بارگذاری...</div>
-  </div>
-</div>
-
-<!-- VIDEOS -->
-<div class="videos-section">
-  <p class="videos-label">📺 ویدیوهای برگزیده — کانال رسمی FIFA</p>
-  <div class="videos-grid">
-    <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/j0BQN0nJ7mM" allowfullscreen></iframe>
-    </div>
-    <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/BVuXxylCcRo" allowfullscreen></iframe>
-    </div>
-    <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/0XtNAQiyaX4" allowfullscreen></iframe>
-    </div>
-    <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/RR1QMWchMXs" allowfullscreen></iframe>
-    </div>
-    <div class="video-box">
-      <iframe src="https://www.youtube.com/embed/4zYJyJY57i8" allowfullscreen></iframe>
-    </div>
   </div>
 </div>
 
@@ -189,7 +252,7 @@
 <footer>
   <p>تمامی حقوق محتوای ویدیویی متعلق به فدراسیون جهانی فوتبال (فیفا) می‌باشد.</p>
   <p>این سایت یک وب‌سایت مستقل خبری است و وابسته به فیفا نمی‌باشد.</p>
-  <p style="color:#666;font-size:12px">منبع ویدیوها: کانال رسمی فیفا در یوتیوب</p>
+  <p style="font-size:11px;margin-top:8px;color:#444">© 2026 <span style="color:#1db954;font-weight:700">Fot</span>Bro</p>
 </footer>
 
 <script>
@@ -198,7 +261,13 @@
   const sendBtn = document.getElementById('sendBtn');
   let history = [];
 
-  // ── داده‌های بازی‌ها به تفکیک تاریخ ──
+  // ── THEME ──
+  function toggleTheme() {
+    const isDay = document.body.classList.toggle('day');
+    document.getElementById('themeBtn').textContent = isDay ? '☀️' : '🌙';
+  }
+
+  // ── MATCH DATA ──
   const matchData = {
     '2026-06-19': [
       { home:'🇮🇷 ایران', away:'بلژیک 🇧🇪', score:'1 - 1', info:'گروه G', done:true },
@@ -237,8 +306,8 @@
     '2026-06-20': 'شنبه ۳۰ خرداد',
     '2026-06-21': 'یکشنبه ۳۱ خرداد',
     '2026-06-22': 'دوشنبه ۱ تیر',
-    '2026-06-23': 'سه‌شنبه ۲ تیر (امروز)',
-    '2026-06-24': 'چهارشنبه ۳ تیر (فردا)',
+    '2026-06-23': 'سه‌شنبه ۲ تیر',
+    '2026-06-24': 'چهارشنبه ۳ تیر',
     '2026-06-25': 'پنجشنبه ۴ تیر',
   };
 
@@ -263,7 +332,7 @@
     const hasResults = matches.some(m => m.done);
     title.textContent = hasResults ? 'نتایج بازی‌ها' : 'برنامه بازی‌ها';
     scroll.innerHTML = '';
-    if (matches.length === 0) {
+    if (!matches.length) {
       scroll.innerHTML = '<div class="no-matches">بازی‌ای برای این روز ثبت نشده</div>';
       return;
     }
@@ -277,7 +346,7 @@
       card.innerHTML = `
         <div class="match-teams">
           <span class="team-flag">${homeFlag}</span>
-          <span class="score ${!m.done ? 'upcoming' : ''}">${m.done ? m.score : 'برنامه'}</span>
+          <span class="score ${!m.done?'upcoming':''}">${m.done?m.score:'برنامه'}</span>
           <span class="team-flag">${awayFlag}</span>
         </div>
         <div class="team-names"><span>${homeName}</span><span>${awayName}</span></div>
@@ -287,25 +356,26 @@
     });
   }
 
-  // ── Chat ──
   function autoGrow(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,140)+'px'; }
   function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
   function fillQ(text) { inputEl.value=text; autoGrow(inputEl); inputEl.focus(); }
 
   function addMsg(role, text) {
     const wrap=document.createElement('div'); wrap.className=`msg ${role==='user'?'user':'ai'}`;
-    const av=document.createElement('div'); av.className=`avatar ${role==='user'?'user-av':'ai'}`; av.textContent=role==='user'?'👤':'⚽';
+    const av=document.createElement('div');
+    av.className=`avatar ${role==='user'?'user-av':'ai'}`;
+    av.innerHTML = role==='user' ? '👤' : '<span style="color:#1db954">Fot</span><span style="color:#fff">B</span>';
     const bubble=document.createElement('div'); bubble.className='bubble';
     bubble.innerHTML=text.replace(/\n/g,'<br/>');
     wrap.appendChild(av); wrap.appendChild(bubble);
     messagesEl.appendChild(wrap);
     wrap.scrollIntoView({behavior:'smooth',block:'end'});
-    return bubble;
   }
 
   function showTyping() {
     const wrap=document.createElement('div'); wrap.className='msg ai'; wrap.id='typing-indicator';
-    const av=document.createElement('div'); av.className='avatar ai'; av.textContent='⚽';
+    const av=document.createElement('div'); av.className='avatar ai';
+    av.innerHTML='<span style="color:#1db954">Fot</span><span style="color:#fff">B</span>';
     const bubble=document.createElement('div'); bubble.className='bubble typing';
     bubble.innerHTML='<span></span><span></span><span></span>';
     wrap.appendChild(av); wrap.appendChild(bubble);
@@ -337,10 +407,21 @@
     sendBtn.disabled=false; inputEl.focus();
   }
 
+  // ── drag scroll ──
+  function addDragScroll(el) {
+    let isDown = false, startX, scrollLeft;
+    el.addEventListener('mousedown', e => { isDown=true; el.style.cursor='grabbing'; startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; });
+    el.addEventListener('mouseleave', () => { isDown=false; el.style.cursor='grab'; });
+    el.addEventListener('mouseup', () => { isDown=false; el.style.cursor='grab'; });
+    el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; el.scrollLeft=scrollLeft-(x-startX); });
+  }
+
   window.onload=()=>{
     renderDateTabs();
     renderMatches();
-    addMsg('ai','سلام! من فوتبال‌یارم ⚽🏆\nخوش اومدی به تحلیلگر هوشمند جام جهانی ۲۰۲۶!\nهر سوالی درباره تیم‌ها، بازیکنان، پیش‌بینی‌ها و تاکتیک‌ها داری بپرس.');
+    addDragScroll(document.getElementById('resultsScroll'));
+    addDragScroll(document.getElementById('dateTabs'));
+    addMsg('ai','سلام! من FotBro هستم ⚽🏆\nخوش اومدی به تحلیلگر هوشمند جام جهانی ۲۰۲۶!\nهر سوالی درباره تیم‌ها، بازیکنان، پیش‌بینی‌ها و تاکتیک‌ها داری بپرس.');
   };
 </script>
 </body>
