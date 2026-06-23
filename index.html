@@ -22,8 +22,28 @@
       flex-direction: column;
       align-items: center;
       overflow-x: hidden;
-      transition: background 0.4s, color 0.4s;
     }
+
+    /* انیمیشن تلگرام‌مانند */
+    .theme-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .theme-overlay.flash {
+      opacity: 1;
+      animation: themeFlash 0.6s ease forwards;
+    }
+    @keyframes themeFlash {
+      0%   { opacity: 0; }
+      20%  { opacity: 0.35; }
+      100% { opacity: 0; }
+    }
+
+    body.transitioning * { transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, opacity 0.5s ease !important; }
 
     /* حالت روز */
     body.day {
@@ -31,9 +51,9 @@
       color: #1a1a2e;
     }
     body.day .bg-blobs { opacity: 1 !important; }
-    body.day .blob-red { background: radial-gradient(circle, #ff6b6b, #e8182b); opacity: 0.35 !important; filter: blur(100px); }
-    body.day .blob-green { background: radial-gradient(circle, #6bcb77, #1db954); opacity: 0.30 !important; filter: blur(100px); }
-    body.day .blob-blue { background: radial-gradient(circle, #6b9fff, #1a6fe8); opacity: 0.30 !important; filter: blur(100px); }
+    body.day .blob-red { background: #e8182b; opacity: 0.22 !important; filter: blur(130px); }
+    body.day .blob-green { background: #1db954 !important; opacity: 0.28 !important; filter: blur(110px); }
+    body.day .blob-blue { background: #1a6fe8; opacity: 0.20 !important; filter: blur(130px); }
     body.day header { background: rgba(255,255,255,0.45); backdrop-filter: blur(20px); border-color: rgba(255,255,255,0.6); }
     body.day .logo .bro { color: #1a1a2e !important; }
     body.day .badge { background: rgba(255,255,255,0.35); backdrop-filter: blur(12px); border-color: rgba(255,255,255,0.5); color: #1a1a2e; }
@@ -48,11 +68,44 @@
     body.day .results-label, body.day .videos-label { color: #64748b; }
 
     .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; transition: opacity 0.4s; }
-    .blob { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15; animation: float 8s ease-in-out infinite; }
-    .blob-red { width:450px; height:450px; background:var(--red); top:-100px; right:-80px; }
-    .blob-green { width:380px; height:380px; background:var(--green); bottom:0; left:-60px; animation-delay:3s; }
-    .blob-blue { width:320px; height:320px; background:var(--blue); top:40%; left:50%; animation-delay:5s; }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
+    .blob { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.18; }
+    .blob-red {
+      width: 600px; height: 600px;
+      top: -150px; right: -150px;
+      animation: moveRed 20s ease-in-out infinite;
+    }
+    .blob-green {
+      width: 600px; height: 600px;
+      bottom: -120px; left: -120px;
+      animation: moveGreen 25s ease-in-out infinite;
+      opacity: 0.28;
+      background: #1db954 !important;
+    }
+    .blob-blue {
+      width: 400px; height: 400px;
+      top: 30%; left: 40%;
+      animation: moveBlue 18s ease-in-out infinite;
+    }
+    @keyframes moveRed {
+      0%   { transform: translate(0, 0);    background: #e8182b; }
+      25%  { transform: translate(-200px, 200px); background: #e8182b; }
+      50%  { transform: translate(-350px, 400px); background: #e8182b; }
+      75%  { transform: translate(-100px, 200px); background: #e8182b; }
+      100% { transform: translate(0, 0);    background: #e8182b; }
+    }
+    @keyframes moveGreen {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(250px, -150px); }
+      50%  { transform: translate(450px, -300px); }
+      75%  { transform: translate(200px, -100px); }
+      100% { transform: translate(0, 0); }
+    }
+    @keyframes moveBlue {
+      0%   { transform: translate(0, 0); }
+      33%  { transform: translate(-300px, 150px); }
+      66%  { transform: translate(200px, -200px); }
+      100% { transform: translate(0, 0); }
+    }
     * { position: relative; z-index: 1; }
 
     /* HEADER */
@@ -77,36 +130,63 @@
       letter-spacing: 1px;
     }
 
-    /* دکمه روز/شب فقط آیکون */
+    /* دکمه روز/شب شیشه‌ای */
     .theme-toggle {
       background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.20);
       border-radius: 99px;
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 12px rgba(0,0,0,0.2);
+      overflow: hidden;
+      position: relative;
     }
-    .theme-toggle:hover { border-color: var(--green); transform: scale(1.1); }
+    .theme-toggle:hover { border-color: rgba(255,255,255,0.4); transform: scale(1.08); }
+    .toggle-icon { transition: opacity 0.4s ease, transform 0.4s ease; }
+    body.day .theme-toggle { background: rgba(255,255,255,0.30); border-color: rgba(255,255,255,0.55); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(0,0,0,0.08); }
 
     /* HERO */
     .hero { text-align:center; padding:48px 24px 20px; max-width:640px; }
 
+    /* استایل اصلاح شده کامپوننت تصویر لوگو */
+    .wc-logo-box {
+      width: 85px;
+      height: 85px;
+      margin: 0 auto 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .wc-logo-box img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
+    body.day .wc-logo-box { background: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.05); }
+
     .wc-fifa {
       display: block;
-      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-size: clamp(0.65rem, 1.8vw, 0.85rem);
       font-weight: 700;
       letter-spacing: 4px;
       background: linear-gradient(90deg, #FFE066, #FFD700, #C8960C, #FFD700);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       font-family: 'Arial', sans-serif;
     }
 
@@ -114,12 +194,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      font-size: clamp(1.8rem, 6vw, 3rem);
+      gap: 6px;
+      font-size: clamp(1.1rem, 3.5vw, 1.6rem);
       font-weight: 900;
       font-family: 'Arial Black', sans-serif;
       white-space: nowrap;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       flex-wrap: nowrap;
     }
     .wc-usa { color: #3b82f6; }
@@ -165,7 +245,7 @@
     .messages { display:flex; flex-direction:column; gap:14px; min-height:80px; }
     .msg { display:flex; gap:10px; align-items:flex-start; }
     .msg.user { flex-direction:row-reverse; }
-    .avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:900; flex-shrink:0; font-family:'Arial Black',sans-serif; }
+    .avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:900; flex-shrink:0; font-family:'Arial Black', sans-serif; }
     .avatar.ai {
       background: linear-gradient(135deg, #1db954, #1a6fe8);
       color: white;
@@ -192,28 +272,27 @@
 </head>
 <body>
 
+<div class="theme-overlay" id="themeOverlay"></div>
 <div class="bg-blobs">
   <div class="blob blob-red"></div>
   <div class="blob blob-green"></div>
   <div class="blob blob-blue"></div>
 </div>
 
-<header style="display: flex; justify-content: space-between; align-items: center; position: relative; height: 70px !important; padding: 0 20px !important;">
-  <div class="logo-wrapper" style="z-index: 2;">
-    <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
-  </div>
-  
-  <div class="center-logo" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1;">
-    <img src="./world-cup-logo.png" alt="FIFA World Cup 2026 Logo" style="width: 45px; height: 45px; object-fit: contain;">
-  </div>
-  
-  <div class="header-right" style="display: flex; align-items: center; gap: 12px; z-index: 2;">
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-    <span class="badge" style="margin: 0; font-size: 11px !important; padding: 3px 8px !important;">جام جهانی ۲۰۲۶</span>
+<header>
+  <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
+  <div class="header-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+      <span class="toggle-icon night-icon">🌙</span>
+      <span class="toggle-icon day-icon" style="display:none">☀️</span>
+    </button>
   </div>
 </header>
 
 <section class="hero">
+  <div class="wc-logo-box">
+    <img src="./world-cup-logo.png" alt="FIFA World Cup 2026 Logo">
+  </div>
   <span class="wc-fifa">FIFA WORLD CUP 2026</span>
   <div class="wc-countries">
     <span class="wc-usa">USA</span>
@@ -222,16 +301,13 @@
     <span class="wc-dot">·</span>
     <span class="wc-mexico">MEXICO</span>
   </div>
-  <p class="hero-sub">تحلیل بازیکن، مقایسه تیم‌ها، پیش‌بینی بازی و هر چیز دیگه‌ای درباره فوتبال رو بپرس.</p>
-  <div class="flags">🇧🇷 🇩🇪 🇦🇷 🇫🇷 🇪🇸 🇵🇹 🇮🇷 🇺🇸</div>
+  <p class="hero-sub" style="margin-top: 18px;">تحلیل بازیکن، مقایسه تیم‌ها، پیش‌بینی بازی و هر چیز دیگه‌ای درباره فوتبال رو بپرس.</p>
 </section>
 
-<!-- DATE NAV -->
 <div class="date-nav">
   <div class="date-tabs" id="dateTabs"></div>
 </div>
 
-<!-- RESULTS -->
 <div class="results-section">
   <p class="results-label"><span class="dot"></span> <span id="resultsTitle">نتایج بازی‌ها</span></p>
   <div class="results-scroll" id="resultsScroll">
@@ -270,8 +346,27 @@
 
   // ── THEME ──
   function toggleTheme() {
-    const isDay = document.body.classList.toggle('day');
-    document.getElementById('themeBtn').textContent = isDay ? '☀️' : '🌙';
+    const overlay = document.getElementById('themeOverlay');
+    const isDay = !document.body.classList.contains('day');
+    
+    overlay.style.background = isDay ? 'rgba(255,255,240,0.6)' : 'rgba(5,8,15,0.6)';
+    overlay.classList.add('flash');
+    setTimeout(() => overlay.classList.remove('flash'), 600);
+
+    document.body.classList.add('transitioning');
+    document.body.classList.toggle('day');
+
+    const nightIcon = document.querySelector('.night-icon');
+    const dayIcon = document.querySelector('.day-icon');
+    if (isDay) {
+      nightIcon.style.display = 'none';
+      dayIcon.style.display = 'inline';
+    } else {
+      nightIcon.style.display = 'inline';
+      dayIcon.style.display = 'none';
+    }
+
+    setTimeout(() => document.body.classList.remove('transitioning'), 500);
   }
 
   // ── MATCH DATA ──
