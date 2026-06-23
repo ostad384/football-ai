@@ -58,11 +58,6 @@
     /* HEADER */
     header { width:100%; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); backdrop-filter:blur(20px); border-bottom:1px solid var(--glass-border); }
 
-    /* چیدمان لوگوی جدید و متن */
-    .logo-wrapper { display: flex; align-items: center; gap: 10px; }
-    .wc-header-logo { width: 35px; height: auto; object-fit: contain; transition: filter 0.4s ease; }
-    body.day .wc-header-logo { filter: brightness(0.1); }
-
     .logo { font-size:1.5rem; font-weight:900; letter-spacing:-1px; font-family:'Arial Black', sans-serif; }
     .logo .fot { color: var(--green); }
     .logo .bro { color: var(--white); }
@@ -204,10 +199,7 @@
 </div>
 
 <header>
-  <div class="logo-wrapper">
-    <img src="https://digitalhub.fifa.com/transform/60b8d54c-1f54-44b7-9e45-d8aa5064e402/FWC26_Brand_Identity_Generic_White_Logo" alt="World Cup 2026 Logo" class="wc-header-logo">
-    <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
-  </div>
+  <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
   <div class="header-right">
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
     <span class="badge">جام جهانی ۲۰۲۶</span>
@@ -224,13 +216,15 @@
     <span class="wc-mexico">MEXICO</span>
   </div>
   <p class="hero-sub">تحلیل بازیکن، مقایسه تیم‌ها، پیش‌بینی بازی و هر چیز دیگه‌ای درباره فوتبال رو بپرس.</p>
-  <div class="flags">🇧🇷 🇩🇪 🇦🇷 🇫🇷 🇪🇸 🇵🇹 🇮ران 🇺🇸</div>
+  <div class="flags">🇧🇷 🇩🇪 🇦🇷 🇫🇷 🇪🇸 🇵🇹 🇮🇷 🇺🇸</div>
 </section>
 
+<!-- DATE NAV -->
 <div class="date-nav">
   <div class="date-tabs" id="dateTabs"></div>
 </div>
 
+<!-- RESULTS -->
 <div class="results-section">
   <p class="results-label"><span class="dot"></span> <span id="resultsTitle">نتایج بازی‌ها</span></p>
   <div class="results-scroll" id="resultsScroll">
