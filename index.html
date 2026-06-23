@@ -199,10 +199,17 @@
 </div>
 
 <header>
-  <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
-  <div class="header-right">
+  <div class="logo-wrapper">
+    <div class="logo"><span class="fot">Fot</span><span class="bro">Bro</span></div>
+  </div>
+  
+  <div class="header-right" style="display: flex; align-items: center; gap: 12px;">
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-    <span class="badge">جام جهانی ۲۰۲۶</span>
+    
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <img src="./world-cup-logo.png" alt="FIFA World Cup 2026 Logo" class="wc-header-logo">
+      <span class="badge" style="margin: 0;">جام جهانی ۲۰۲۶</span>
+    </div>
   </div>
 </header>
 
